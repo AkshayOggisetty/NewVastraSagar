@@ -63,9 +63,13 @@ class SaleEntry(db.Model):
 
 
 # ─── SERVE FRONTEND ──────────────────────────────────────────
-@app.route('/')
-def index():
-    return send_from_directory('static', 'index.html')
+@app.route('/', defaults={'path': ''})
+@app.route('/<path:path>')
+def serve(path):
+    if path != "" and os.path.exists(os.path.join(app.static_folder, path)):
+        return send_from_directory(app.static_folder, path)
+    else:
+        return send_from_directory(app.static_folder, 'index.html')
 
 
 # ─── API: CATEGORIES & PAYMENT MODES ─────────────────────────
