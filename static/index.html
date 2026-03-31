@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Vastra Sagar - Cloth Store Sales Log Entry & Profit Reports">
+    <title>Vastra Sagar — Sales Log</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
+</head>
+<body>
+
+<div class="app-wrapper">
+    <!-- Header -->
+    <header class="app-header">
+        <div class="logo">
+            <span class="logo-icon">🧵</span>
+            <h1>Vastra Sagar</h1>
+        </div>
+        <p class="tagline">Sales Log & Reports</p>
+    </header>
+
+    <!-- Navigation Tabs -->
+    <nav class="tab-nav" id="tabNav">
+        <button class="tab-btn active" data-tab="dashboard" id="tab-dashboard">Dashboard</button>
+        <button class="tab-btn" data-tab="add-entry" id="tab-add-entry">Add Entry</button>
+        <button class="tab-btn" data-tab="records" id="tab-records">Records</button>
+        <button class="tab-btn" data-tab="reports" id="tab-reports">Reports</button>
+    </nav>
+
+    <!-- ═══════ DASHBOARD TAB ═══════ -->
+    <section class="tab-content active" id="dashboard">
+        <div class="stats-grid" id="statsGrid">
+            <div class="stat-card stat-sales">
+                <div class="stat-icon">📦</div>
+                <div class="stat-info">
+                    <span class="stat-label">Today's Sales</span>
+                    <span class="stat-value" id="todaySales">0</span>
+                </div>
+            </div>
+            <div class="stat-card stat-revenue">
+                <div class="stat-icon">💰</div>
+                <div class="stat-info">
+                    <span class="stat-label">Today's Revenue</span>
+                    <span class="stat-value" id="todayRevenue">₹0</span>
+                </div>
+            </div>
+            <div class="stat-card stat-profit">
+                <div class="stat-icon">📈</div>
+                <div class="stat-info">
+                    <span class="stat-label">Today's Profit</span>
+                    <span class="stat-value" id="todayProfit">₹0</span>
+                </div>
+            </div>
+            <div class="stat-card stat-total">
+                <div class="stat-icon">🏪</div>
+                <div class="stat-info">
+                    <span class="stat-label">Total Profit</span>
+                    <span class="stat-value" id="totalProfit">₹0</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <h2 class="card-title">Recent Entries</h2>
+            <div class="table-wrapper">
+                <table class="data-table" id="recentTable">
+                    <thead>
+                        <tr>
+                            <th>Item</th>
+                            <th>Category</th>
+                            <th>Qty</th>
+                            <th>Selling ₹</th>
+                            <th>Profit ₹</th>
+                            <th>Date</th>
+                        </tr>
+                    </thead>
+                    <tbody id="recentBody">
+                        <tr><td colspan="6" class="empty-msg">Loading...</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </section>
+
+    <!-- ═══════ ADD ENTRY TAB ═══════ -->
+    <section class="tab-content" id="add-entry">
+        <div class="card">
+            <h2 class="card-title">New Sale Entry</h2>
+            <form id="entryForm" class="entry-form">
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="itemName">Item / Dress Name</label>
+                        <input type="text" id="itemName" placeholder="e.g. Shirt, Pant" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="category">Category</label>
+                        <select id="category" required>
+                            <option value="Shirt">Shirt</option>
+                            <option value="Pant">Pant</option>
+                            <option value="Short">Short</option>
+                            <option value="Vest">Vest</option>
+                            <option value="Brief">Brief</option>
+                            <option value="Kids Wear">Kids Wear</option>
+                            <option value="Pancha">Pancha</option>
+                            <option value="Suits">Suits</option>
+                            <option value="Women Dresses">Women Dresses</option>
+                            <option value="Other">Other</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="quantity">Quantity</label>
+                        <input type="number" id="quantity" value="1" min="1" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="costPrice">Cost Price (₹ per unit)</label>
+                        <input type="number" id="costPrice" step="0.01" value="0.00" min="0" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="sellingPrice">Selling Price (₹ per unit)</label>
+                        <input type="number" id="sellingPrice" step="0.01" value="0.00" min="0" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="entryDate">Date</label>
+                        <input type="date" id="entryDate" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="customerName">Customer Name (optional)</label>
+                        <input type="text" id="customerName" placeholder="Walk-in">
+                    </div>
+                    <div class="form-group">
+                        <label for="paymentMode">Payment Mode</label>
+                        <select id="paymentMode">
+                            <option value="UPI">UPI</option>
+                            <option value="Cash">Cash</option>
+                            <option value="Card">Card</option>
+                            <option value="Other">Other</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-actions">
+                    <button type="submit" class="btn btn-primary" id="addEntryBtn">Add Entry</button>
+                    <button type="reset" class="btn btn-secondary" id="clearBtn">Clear</button>
+                </div>
+            </form>
+        </div>
+    </section>
+
+    <!-- ═══════ RECORDS TAB ═══════ -->
+    <section class="tab-content" id="records">
+        <div class="card">
+            <h2 class="card-title">Sales Records</h2>
+            <div class="filter-bar">
+                <input type="text" id="searchInput" placeholder="Search by item or customer..." class="filter-input">
+                <select id="filterCategory" class="filter-select">
+                    <option value="All">All Categories</option>
+                    <option value="Shirt">Shirt</option>
+                    <option value="Pant">Pant</option>
+                    <option value="Short">Short</option>
+                    <option value="Vest">Vest</option>
+                    <option value="Brief">Brief</option>
+                    <option value="Kids Wear">Kids Wear</option>
+                    <option value="Pancha">Pancha</option>
+                    <option value="Suits">Suits</option>
+                    <option value="Women Dresses">Women Dresses</option>
+                    <option value="Other">Other</option>
+                </select>
+                <input type="date" id="filterDateFrom" class="filter-input" title="From date">
+                <input type="date" id="filterDateTo" class="filter-input" title="To date">
+                <button class="btn btn-primary btn-sm" id="applyFilterBtn">Filter</button>
+            </div>
+            <div class="table-wrapper">
+                <table class="data-table" id="recordsTable">
+                    <thead>
+                        <tr>
+                            <th>Item</th>
+                            <th>Category</th>
+                            <th>Qty</th>
+                            <th>Cost ₹</th>
+                            <th>Selling ₹</th>
+                            <th>Profit ₹</th>
+                            <th>Date</th>
+                            <th>Customer</th>
+                            <th>Payment</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody id="recordsBody">
+                        <tr><td colspan="10" class="empty-msg">No records found</td></tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="pagination" id="paginationControls"></div>
+        </div>
+    </section>
+
+    <!-- ═══════ REPORTS TAB ═══════ -->
+    <section class="tab-content" id="reports">
+        <div class="report-controls">
+            <button class="btn btn-report active" data-view="daily" id="viewDaily">Day-wise</button>
+            <button class="btn btn-report" data-view="monthly" id="viewMonthly">Month-wise</button>
+            <button class="btn btn-report" data-view="yearly" id="viewYearly">Year-wise</button>
+            <select id="reportYear" class="filter-select"></select>
+            <select id="reportMonth" class="filter-select">
+                <option value="1">January</option>
+                <option value="2">February</option>
+                <option value="3">March</option>
+                <option value="4">April</option>
+                <option value="5">May</option>
+                <option value="6">June</option>
+                <option value="7">July</option>
+                <option value="8">August</option>
+                <option value="9">September</option>
+                <option value="10">October</option>
+                <option value="11">November</option>
+                <option value="12">December</option>
+            </select>
+        </div>
+
+        <div class="card chart-card">
+            <h2 class="card-title" id="chartTitle">Daily Profit Report</h2>
+            <div class="chart-container">
+                <canvas id="profitChart"></canvas>
+            </div>
+        </div>
+
+        <div class="card">
+            <h2 class="card-title">Profit Details</h2>
+            <div class="table-wrapper">
+                <table class="data-table" id="reportTable">
+                    <thead>
+                        <tr>
+                            <th id="reportPeriodHeader">Date</th>
+                            <th>Sales</th>
+                            <th>Revenue ₹</th>
+                            <th>Cost ₹</th>
+                            <th>Profit ₹</th>
+                        </tr>
+                    </thead>
+                    <tbody id="reportBody">
+                        <tr><td colspan="5" class="empty-msg">Loading report...</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </section>
+</div>
+
+<!-- Toast Notification -->
+<div class="toast" id="toast"></div>
+
+<script src="app.js"></script>
+</body>
+</html>
